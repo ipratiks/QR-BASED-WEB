@@ -1,0 +1,48 @@
+// backend/prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Patient {
+  id                    String    @id @default(uuid())
+  name                  String
+  registrationTime      DateTime  @default(now())
+  doctorAppointmentTime DateTime?
+  departmentId          String?
+  doctorId              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  department Department? @relation(fields: [departmentId], references: [id])
+  doctor     Doctor?     @relation(fields: [doctorId], references: [id])
+}
+
+model Department {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  patients  Patient[]
+}
+
+model Doctor {
+  id        String    @id @default(uuid())
+  name      String
+  patients  Patient[]
+}
+
+// Custom User model for authentication
+model User {
+  id        String    @id @default(uuid()) // Prisma-generated UUID
+  email     String    @unique
+  password  String    // Hashed password
+  role      String    @default("DOCTOR") // 'ADMIN', 'DOCTOR'
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("users") // Map to a 'users' table in your database
+}

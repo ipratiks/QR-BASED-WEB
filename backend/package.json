@@ -1,0 +1,27 @@
+{
+  "name": "hospital-waiting-app-backend",
+  "version": "1.0.0",
+  "description": "Backend for hospital patient waiting time calculator",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "postinstall": "npx prisma generate" 
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^5.x.x",
+    "bcryptjs": "^2.4.3",           
+    "cors": "^2.8.5",
+    "dotenv": "^16.x.x",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.x.x",        
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4",
+    "prisma": "^5.x.x"
+  }
+}
