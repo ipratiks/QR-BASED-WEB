@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import QRCodeScanner from '../components/QRCodeScanner';
+import QRCodeGenerator from '../components/QRCodeGenerator'; // Import QRCodeGenerator
 import { recordAppointmentTime, getAllPatients } from '../api/patientApi';
 
 const DoctorConsole = () => {
@@ -28,7 +29,7 @@ const DoctorConsole = () => {
 
   useEffect(() => {
     fetchPatients();
-    // Refresh patients every 30 seconds for real-time updates (optional)
+    // Refresh patients every 30 seconds for real-time updates
     const interval = setInterval(fetchPatients, 30000);
     return () => clearInterval(interval);
   }, []);
@@ -40,7 +41,6 @@ const DoctorConsole = () => {
       setMessage({ type: 'success', text: `Appointment time recorded for patient ID: ${patientId}` });
       fetchPatients(); // Refresh the list
     } catch (error) {
-      // Check for the specific error message from the backend
       if (error.message && error.message.includes('QR code has already been scanned')) {
         setMessage({ type: 'error', text: `Error: ${error.message}` });
       } else {
@@ -58,7 +58,7 @@ const DoctorConsole = () => {
 
   return (
     <div>
-      <h1>👨‍⚕️ Doctor's Console</h1>
+      <h1>👨‍⚕;️ Doctor's Console</h1>
       {message.text && (
         <div className={`message ${message.type}`}>
           {message.text}
@@ -81,6 +81,7 @@ const DoctorConsole = () => {
               <th>Doctor Appointment Time</th>
               <th>Waiting Time (minutes)</th>
               <th>Status</th>
+              <th>QR Code</th> {/* NEW TABLE HEADER */}
             </tr>
           </thead>
           <tbody>
@@ -96,6 +97,15 @@ const DoctorConsole = () => {
                 </td>
                 <td style={{ color: patient.doctorAppointmentTime ? 'green' : 'orange' }}>
                   {patient.doctorAppointmentTime ? 'Seen' : 'Waiting'}
+                </td>
+                <td> {/* NEW TABLE DATA CELL */}
+                  {/* Render QR code only if not yet seen by doctor */}
+                  {!patient.doctorAppointmentTime && (
+                    <QRCodeGenerator value={patient.id} size={60} /> 
+                  )}
+                  {patient.doctorAppointmentTime && (
+                    <span style={{ fontSize: '0.8em', color: '#888' }}>Scanned</span>
+                  )}
                 </td>
               </tr>
             ))}
